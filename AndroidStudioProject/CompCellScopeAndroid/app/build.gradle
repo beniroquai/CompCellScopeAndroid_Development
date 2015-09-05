@@ -8,8 +8,8 @@ android {
     buildToolsVersion "23.0.0 rc2"
     defaultConfig {
         applicationId "com.wallerlab.compcellscope"
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 21
+        targetSdkVersion 21
     }
     buildTypes {
         release {

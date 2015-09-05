@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/joelwhang/Waller/CompCellScopeAndroid/openCVLibrary249/src/main/assets"/></dataSet><dataSet config="release"><source path="/Users/joelwhang/Waller/CompCellScopeAndroid/openCVLibrary249/src/release/assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/openCVLibrary249/src/main/assets"/></dataSet><dataSet config="release"><source path="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/openCVLibrary249/src/release/assets"/></dataSet></merger>

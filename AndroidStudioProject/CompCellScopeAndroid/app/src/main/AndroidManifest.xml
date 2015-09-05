@@ -95,6 +95,11 @@
             android:name=".dialog.DirectoryChooserDialog"
             android:label="@string/title_activity_directory_chooser_dialog" >
         </activity>
+        <activity
+            android:name=".AcquireActivity2"
+            android:label="@string/app_name"
+            android:parentActivityName=".ComputationalCellScopeMain" >
+        </activity>
     </application>
 
 </manifest>

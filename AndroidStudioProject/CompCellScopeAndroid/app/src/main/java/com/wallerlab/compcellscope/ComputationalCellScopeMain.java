@@ -235,7 +235,12 @@ public class ComputationalCellScopeMain extends Activity{
 
     btnAcquireFullScan.setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
-        	startAcquireActivity("Full_Scan");
+//        	startAcquireActivity("Full_Scan");
+
+            Intent intent = new Intent(ComputationalCellScopeMain.this, AcquireActivity2.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
         }
       });
 
@@ -248,6 +253,7 @@ public class ComputationalCellScopeMain extends Activity{
 
     btnMultiModeViewer.setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
+
         	startMultiViewerActivity();
 
 
@@ -330,17 +336,7 @@ public class ComputationalCellScopeMain extends Activity{
       startActivity(intent);
   }
 
-  //Testing qDPC and Refocus here (using NDK and maybe Java? for test preformance comparisons)
-  protected void startTestViewerActivity(){
-//      Log.i("TestQDPC", "1");
-//      Intent intent = new Intent(this, TestViewerActivity.class);
-//      Log.i("TestQDPC", "2");
-//      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//      Log.i("TestQDPC", "3");
-//      startActivity(intent);
-//      Log.i("TestQDPC", "finished");
 
-  }
 
   public void chooseDatasetDirectory()
   {

@@ -165,6 +165,28 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/acqExposureTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exposure Time (ns)"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/acquireSettingsExposureTimeEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number|numberSigned"
+                android:text="0" />
+        </LinearLayout>
+
         <CheckBox
             android:id="@+id/acquireSettingsHDRCheckbox"
             android:layout_width="wrap_content"
@@ -175,4 +197,4 @@
 
     </LinearLayout>
 
-</RelativeLayout><!-- From: file:/Users/joelwhang/Waller/CompCellScopeAndroid/app/src/main/res/layout/acquire_settings_layout.xml -->
+</RelativeLayout><!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/layout/acquire_settings_layout.xml -->

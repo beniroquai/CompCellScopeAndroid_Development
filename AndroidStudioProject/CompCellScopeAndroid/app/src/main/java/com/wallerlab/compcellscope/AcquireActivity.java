@@ -1026,6 +1026,8 @@ public class AcquireActivity extends Activity implements OnTouchListener, Notice
     		
         }
     }
+
+
    
     private class runScanningMode extends AsyncTask<Void, Void, Void>
     {

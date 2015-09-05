@@ -24,7 +24,7 @@
 
 package com.wallerlab.compcellscope.dialogs;
 
-import com.wallerlab.compcellscope.AcquireActivity;
+import com.wallerlab.compcellscope.AcquireActivity2;
 import com.wallerlab.compcellscope.R;
 import com.wallerlab.compcellscope.R.id;
 import com.wallerlab.compcellscope.R.layout;
@@ -64,6 +64,7 @@ public class AcquireSettings extends DialogFragment{
     private TextView acquireSettingsSetMultiModeDelayEditText;
     private TextView acquireSettingsAECCompensationEditText;
     private CheckBox acquireSettingsHDRCheckbox;
+    private TextView acquireSettingsExposureTimeEditText;
     
     // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
     @Override
@@ -108,16 +109,19 @@ public class AcquireSettings extends DialogFragment{
     	        String mmDelayValue = acquireSettingsSetMultiModeDelayEditText.getText().toString();
     	        String aecCompensationVal = acquireSettingsAECCompensationEditText.getText().toString();
     	        String datasetName = acquireSettingsSetDatasetName.getText().toString();
+                String exposureTime = acquireSettingsExposureTimeEditText.getText().toString();
     	        Log.d(TAG,String.format("mmCount: %s", mmCountValue));
     	        Log.d(TAG,String.format("mmDelay: %s", mmDelayValue));
     	        Log.d(TAG,String.format("new na: %s", naValue));
-    	        AcquireActivity callingActivity = (AcquireActivity) getActivity();
-    	        callingActivity.setMultiModeCount(Integer.parseInt(mmCountValue));
-    	        callingActivity.setMultiModeDelay(Float.parseFloat(mmDelayValue));
+                Log.d(TAG,String.format("new exposureTime: %s", exposureTime));
+    	        AcquireActivity2 callingActivity = (AcquireActivity2) getActivity();
+//    	        callingActivity.setMultiModeCount(Integer.parseInt(mmCountValue));
+//    	        callingActivity.setMultiModeDelay(Float.parseFloat(mmDelayValue));
     	        callingActivity.setNA(Float.parseFloat(naValue));
     	        callingActivity.setDatasetName(datasetName);
-    	        callingActivity.setAECCompensation(Integer.parseInt(aecCompensationVal));
-    	        callingActivity.setHDR(acquireSettingsHDRCheckbox.isChecked());
+//    	        callingActivity.setAECCompensation(Integer.parseInt(aecCompensationVal));
+//    	        callingActivity.setHDR(acquireSettingsHDRCheckbox.isChecked());
+                callingActivity.setExposureTime(exposureTime);
              }
          })
          .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -126,8 +130,12 @@ public class AcquireSettings extends DialogFragment{
              }
          });  
           
-          AcquireActivity callingActivity = (AcquireActivity) getActivity();
-          
+          AcquireActivity2 callingActivity = (AcquireActivity2) getActivity();
+
+          acquireSettingsExposureTimeEditText = (TextView) content.findViewById(id.acquireSettingsExposureTimeEditText);
+          acquireSettingsExposureTimeEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+          acquireSettingsExposureTimeEditText.setText(String.format("%d", callingActivity.exposureTime));
+
           acquireSettingsMultiModeCountTextView = (TextView) content.findViewById(R.id.acquireSettingsMultiModeCountTextView);
           acquireSettingsMultiModeCountTextView.setInputType(InputType.TYPE_CLASS_NUMBER);
           acquireSettingsMultiModeCountTextView.setText(String.format("%d", callingActivity.mmCount));
@@ -154,8 +162,8 @@ public class AcquireSettings extends DialogFragment{
           acqSettingsBrightfieldButton = (Button) content.findViewById(R.id.acqSettingsBrightfieldButton);
           acqSettingsBrightfieldButton.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
-      	        AcquireActivity callingActivity = (AcquireActivity) getActivity();
-      	        callingActivity.toggleBrightfield();
+      	        AcquireActivity2 callingActivity = (AcquireActivity2) getActivity();
+//      	        callingActivity.toggleBrightfield();
 
               }
             });
@@ -163,15 +171,15 @@ public class AcquireSettings extends DialogFragment{
           acqSettingsDarkfieldButton = (Button) content.findViewById(R.id.acqSettingsDarkfieldButton);
           acqSettingsDarkfieldButton.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
-      	        AcquireActivity callingActivity = (AcquireActivity) getActivity();
-      	        callingActivity.toggleDarkfield();
+      	        AcquireActivity2 callingActivity = (AcquireActivity2) getActivity();
+//      	        callingActivity.toggleDarkfield();
               }
             });
           acqSettingsAlignmentButton = (Button) content.findViewById(R.id.acqSettingsAlignmentButton); // CLEARS THE ARRAY FOR NOW
           acqSettingsAlignmentButton.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
-      	        AcquireActivity callingActivity = (AcquireActivity) getActivity();
-      	        callingActivity.toggleAlignment();
+      	        AcquireActivity2 callingActivity = (AcquireActivity2) getActivity();
+//      	        callingActivity.toggleAlignment();
               }
             });
 

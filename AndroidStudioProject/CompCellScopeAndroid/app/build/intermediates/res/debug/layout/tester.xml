@@ -20,4 +20,4 @@
         android:layout_above="@+id/qDPCButton"
         android:layout_marginTop="10dp"/>
 
-</RelativeLayout><!-- From: file:/Users/joelwhang/Waller/CompCellScopeAndroid/app/src/main/res/layout/tester.xml -->
+</RelativeLayout><!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/layout/tester.xml -->
