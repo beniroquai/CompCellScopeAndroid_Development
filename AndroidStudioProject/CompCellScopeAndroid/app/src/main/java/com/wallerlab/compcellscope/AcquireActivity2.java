@@ -30,6 +30,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+import android.media.MediaScannerConnection;
+import android.hardware.camera2.DngCreator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -116,13 +118,12 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
     public DialogFragment settingsDialogFragment;
     int mode = 1;
-
+    private Size mImgSize;
 
     /// break --- break --- break
 
     private File file;
     int n = 0;
-    boolean ready = true;
 
     private final static String TAG = "Camera2testJ";
     private Size mPreviewSize;
@@ -142,6 +143,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
     private CaptureRequest.Builder captureBuilder;
 
     private int index2;
+    private DngCreator mDngCreator;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -169,22 +171,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
             @Override
             public void onClick(View v) {
-//                Log.e(TAG, "mBtnShot clicked");
-////                file = new File(Environment.getExternalStorageDirectory()+"/DCIM", "pic" + Integer.toString(n) + ".jpg");
-//                n = 0;
-//                while (n < 10) {
-//                    if (ready) {
-//                        file = new File(Environment.getExternalStorageDirectory()+"/DCIM", "pic" + Integer.toString(n) + ".jpg");
-//                        takePicture();
-//                        n++;
-//                    }
-//                    Log.i("CAM2", Integer.toString(n));
-//                    Log.i("CAM2", "ready: " + Boolean.toString(ready));
-//                }
-//                startPreview();
-//                Log.i("CAM2", "StartPreview() called");
 
-//                takePicture();
                 objectiveNA = 1.0;
                 new runScanningMode().execute();
             }
@@ -213,7 +200,8 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
     }
 
     protected void takePicture() {
-        ready = false;
+        Log.i("TP", Integer.toString(index2));
+        cameraReady = false;
         Log.e(TAG, "takePicture");
         Log.i("YOCAM", "takePicture");
         if(null == mCameraDevice) {
@@ -224,22 +212,22 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
             Log.i("YOCAM", "TRY WORKS");
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraDevice.getId());
+            final CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraDevice.getId());
 
-            Size[] jpegSizes = null;
+            Size[] imgSizes = null;
             if (characteristics != null) {
-                jpegSizes = characteristics
+                imgSizes = characteristics
                         .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
-                        .getOutputSizes(ImageFormat.JPEG);
+                        .getOutputSizes(ImageFormat.RAW_SENSOR);
             }
             int width = 640;
             int height = 480;
-            if (jpegSizes != null && 0 < jpegSizes.length) {
-                width = jpegSizes[0].getWidth();
-                height = jpegSizes[0].getHeight();
+            if (imgSizes != null && 0 < imgSizes.length) {
+                width = imgSizes[0].getWidth();
+                height = imgSizes[0].getHeight();
             }
-
-            reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+            mImgSize = imgSizes[0];
+            reader = ImageReader.newInstance(width, height, ImageFormat.RAW_SENSOR, 1);
             outputSurfaces = new ArrayList<Surface>(2);
             outputSurfaces.add(reader.getSurface());
 
@@ -247,10 +235,9 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
             captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
-//            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-//            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
-            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_STATE_FOCUSED_LOCKED);
-
+            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_MODE_OFF);
+            captureBuilder.set(CaptureRequest.CONTROL_AE_ANTIBANDING_MODE, CameraMetadata.CONTROL_AE_ANTIBANDING_MODE_OFF);
+            captureBuilder.set(CaptureRequest.CONTROL_AE_MODE,CameraMetadata.CONTROL_AE_MODE_OFF);
             captureBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CameraMetadata.CONTROL_AWB_MODE_OFF);
             captureBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CameraMetadata.CONTROL_EFFECT_MODE_OFF);
             captureBuilder.set(CaptureRequest.EDGE_MODE, CameraMetadata.EDGE_MODE_OFF);
@@ -263,23 +250,18 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
 
-//            file = new File(Environment.getExternalStorageDirectory()+"/DCIM", "pic.jpg");
-//
+
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
 
                 @Override
                 public void onImageAvailable(ImageReader reader) {
-//
                     Image image = null;
                     try {
-                        Log.i("YOCAM", "reader?");
                         image = reader.acquireLatestImage();
                         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                         byte[] bytes = new byte[buffer.capacity()];
 
                         buffer.get(bytes);
-                        Log.i("YOCAM", "before save() called");
-
                         save(bytes);
                         buffer.clear();
                     } catch (FileNotFoundException e) {
@@ -289,38 +271,24 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                     } finally {
                         if (image != null) {
                             image.close();
-                            image = null;
                             thread.quit();
                         }
                     }
                 }
 
                 private void save(byte[] bytes) throws IOException {
-                    Log.i("YOCAM", "save() called");
-                    Log.i("YOCAM", file.getName());
                     OutputStream output = null;
                     try {
-                        Log.i("FCAM", "index2: "+Integer.toString(index2));
-                        if(index2 < 325) {
-//                        Log.i("FCAM", "0000000000")
-                            output = new FileOutputStream(file);
-//                        Log.i("FCAM", "1111111111");
-                            output.write(bytes);
-//                        Log.i("FCAM", "2222222222");
-                            output.close();
-                        }
-                        else if(index2 >= 325) {
-                            Log.i("FCAM", "0000000000");
-                            output = new FileOutputStream(file);
-                            Log.i("FCAM", "1111111111");
-                            output.write(bytes);
-                            Log.i("FCAM", "2222222222");
-                            output.close();
-                        }
+                        output = new FileOutputStream(file);
+
+                        ByteBuffer buf = ByteBuffer.wrap(bytes);
+                        mDngCreator.writeByteBuffer(output, mImgSize, buf, 0);
+//                        output.write(bytes);
+                        output.close();
                     } finally {
                         if (null != output) {
                             output.close();
-                            output = null;
+                            cameraReady = true;
                         }
 
                     }
@@ -340,8 +308,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                                                CaptureRequest request, TotalCaptureResult result) {
 
                     super.onCaptureCompleted(session, request, result);
-//                    Toast.makeText(AcquireActivity2.this, "Saved:"+file, Toast.LENGTH_SHORT).show();
-//                    startPreview();
+                    mDngCreator = new DngCreator(characteristics, result);
                 }
 
             };
@@ -364,18 +331,11 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
                 }
             }, backgroudHandler);
-            ready = true;
 
-//            reader.finalize();
-//            ImageReader testreader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
-//            testreader.close();
-//            testreader.
+
 
             outputSurfaces.clear();
-//            thread.quit();
         } catch (CameraAccessException e) {
-            Log.i("YOCAM", "Take Picture error");
-
             e.printStackTrace();
         }
 
@@ -429,6 +389,26 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         }
 
     };
+
+    public void updateFileStructure(String currPath) {
+        File f = new File(currPath);
+        File[] fileList = f.listFiles();
+        ArrayList<String> arrayFiles = new ArrayList<String>();
+        if (!(fileList.length == 0))
+        {
+            for (int i=0; i<fileList.length; i++)
+                arrayFiles.add(currPath+"/"+fileList[i].getName());
+        }
+
+        String[] fileListString = new String[arrayFiles.size()];
+        fileListString = arrayFiles.toArray(fileListString);
+        MediaScannerConnection.scanFile(AcquireActivity2.this,
+                fileListString, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                    }
+                });
+    }
 
     private CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback() {
 
@@ -540,7 +520,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         int n = 0;
 
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",Locale.US).format(new Date());
-        String path = "/CellScope/" + acquireType + "_" + datasetName + "_" + timestamp;
+        String path = "/CellScope/" + "FPMScan" + "_" + datasetName + "_" + timestamp;
         File myDir = new File(Environment.getExternalStorageDirectory()+ path);
 
         void mSleep(int sleepVal)
@@ -565,8 +545,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 //            acquireProgressBar.setVisibility(View.VISIBLE); // Make invisible at first, then have it pop up
 
             // Count how many LEDs there are for progress bar - this only happens once and should be fairly fast, but isn't optimal.
-            for (int index=0; index<ledCount; index++)
-            {
+            for (int index=0; index<ledCount; index++) {
                 if (Math.sqrt(Math.sin((double) (domeCoordinates[index][2]) / 1000.0) * Math.sin((double) (domeCoordinates[index][2]) / 1000.0) + Math.sin((double) (domeCoordinates[index][3]) / 1000.0) * Math.sin((double) (domeCoordinates[index][3]) / 1000.0)) < objectiveNA)
                     centerCount++;
             }
@@ -614,43 +593,27 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         protected Void doInBackground(Void... params) {
             Log.i("CAM2", "do in Background started");
             t = SystemClock.elapsedRealtime();
-            int start, end;
-//            if (mode == 1) {
-//                start = 1;
-//                end = 250;
-//            } else {
-//                start = 252;
-//                end = ledCount;
-//            }
-            for (int index=1; index<=ledCount; index++)
-//                for (int index=300; index<=ledCount; index++)
-            {
+
+            for (int index=1; index<=ledCount; index++) {
                 index2 = index;
                 Log.i("CAM2", Integer.toString(domeCoordinates[index-1][0]));
                 if (Math.sqrt(Math.sin((double)(domeCoordinates[index-1][2])/1000.0)*Math.sin((double)(domeCoordinates[index-1][2])/1000.0)+ Math.sin((double)(domeCoordinates[index-1][3])/1000.0)*Math.sin((double)(domeCoordinates[index-1][3])/1000.0)) < objectiveNA)
                 {
-                    n++;
                     String cmd = String.format("dh,%d",index);
                     sendData(cmd);
                     mSleep(100);
-                    cameraReady = false;
+
                     //Changeed .jpg to .YUV for faster save time? nah.
-                    file = new File(Environment.getExternalStorageDirectory()+"/DCIM", "pic" +
-                            Integer.toString(domeCoordinates[index - 1][0]) + ".jpg");
-                    captureImage(path + "/" + timestamp + "_scanning_" + String.format("%d", index));
+                    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",Locale.US).format(new Date());
+                    file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
+                            timestamp + "_scanning_" + Integer.toString(index) + ".dng");
+                    Log.i("SKIPCAM", "doInBackground: " + file.getAbsolutePath());
+                    captureImage();
 
 //                    publishProgress();
 
 
-
-//
-//                }if ((index % 1) == 0 ){
-//                        try {
-//                            Thread.sleep(10000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-                    while (!ready)
+                    while (!cameraReady)
                     {
                         try {
                             Thread.sleep(10);
@@ -658,9 +621,6 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                             e.printStackTrace();
                         }
                     }
-                    file = null;
-
-
                 }
             }
 
@@ -677,22 +637,18 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             //String cmd = String.format("p%d", centerLED);
             String cmd = "bf";
             sendData(cmd);
-//            timeLeftTextView.setText(" ");
-
-            // Unlock Exposure
-//            mode = 2;
-//            new runScanningMode().execute();
 
             //Clear the dome
             sendData("xx");
 
+            updateFileStructure(myDir.getAbsolutePath());
+
+
         }
     }
 
-    public void captureImage(String fileHeader)
+    public void captureImage()
     {
-        fileName = fileHeader;
-
         takePicture();
     }
 
@@ -710,15 +666,6 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             byte[] send = message.getBytes();
             mBluetoothService.write(send);
         }
-
-
-         /*
-		   try {
-			  Thread.sleep(2000);
-		   } catch (InterruptedException e) {
-			e.printStackTrace();
-		   }
-		   */
 
     }
     // FORMAT: hole number,, channel, 1000*Theta_x, 1000*Theta_y
