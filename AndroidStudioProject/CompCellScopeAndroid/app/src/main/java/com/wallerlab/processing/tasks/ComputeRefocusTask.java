@@ -39,7 +39,10 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
+import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+
+
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -214,6 +217,7 @@ public class ComputeRefocusTask extends ImageProgressTask{
             if (mDataset.leftList.contains(holeNum)) //add LHS
             {
                 Core.add(dpc_result_lr, shifted, dpc_result_lr);
+
             }
             else //subtract RHS
             {

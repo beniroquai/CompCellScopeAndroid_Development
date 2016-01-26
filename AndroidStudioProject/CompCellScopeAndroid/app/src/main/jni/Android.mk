@@ -7,7 +7,7 @@ include $(CLEAR_VARS)
 OPENCV_INSTALL_MODULES:=on
 include /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/OpenCV.mk
 LOCAL_MODULE    := nativeProcessing
-LOCAL_SRC_FILES := native.cpp
+LOCAL_SRC_FILES := native.cpp fpmMlain.cpp jsoncpp.cpp cvComplex.cpp
 LOCAL_LDLIBS +=  -llog -ldl
-LOCAL_C_INCLUDE := opencv2/core/core.hpp
+LOCAL_C_INCLUDE := opencv2/core/core.hpp jsoncpp.h cvCmomplex.h
 include $(BUILD_SHARED_LIBRARY)

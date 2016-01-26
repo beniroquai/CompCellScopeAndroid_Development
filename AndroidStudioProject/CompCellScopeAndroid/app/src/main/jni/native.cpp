@@ -31,16 +31,17 @@ class R_image{
 };
 
 extern "C" {
+//void method(int i);
 int* meshgrid_x(int width);
 int* meshgrid_y(int height);
 int loadImages(string datasetRoot, vector<R_image> *images);
 void circularShift(Mat img, Mat result, int x, int y);
 void computeFocusDPC(vector<R_image> iStack, int fileCount, float z, int width, int height, int xcrop, int ycrop, Mat* results);
 
-
-
 JNIEXPORT void JNICALL Java_com_wallerlab_compcellscope_ComputeDPCRefocusTask_computeDPCRefocus(JNIEnv* env, jobject, jfloat zMin, jfloat zStep,
                                                                                                        jfloat zMax, jstring datasetRoot);
+JNIEXPORT void JNICALL Java_com_wallerlab_compcellscope_ComputationalCellScopeMain_method(JNIEnv* env, jobject, jint i);
+
 JNIEXPORT jdoubleArray JNICALL Java_com_wallerlab_processing_tasks_ComputePhaseHeightMap_computePhaseImage(JNIEnv* env, jobject, jlong addrInput);
 
 JNIEXPORT void JNICALL Java_com_wallerlab_processing_tasks_ComputeDPCRefocusTask_computeDPCRefocus(JNIEnv* env, jobject, jfloat zMin, jfloat zStep,
@@ -338,5 +339,6 @@ void computeFocusDPC(vector<R_image> iStack, int fileCount, float z, int width, 
         results[2] = dpc_result_tb8;
 
 }
+
 
 }

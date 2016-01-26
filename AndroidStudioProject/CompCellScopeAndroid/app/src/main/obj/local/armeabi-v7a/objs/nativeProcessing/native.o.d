@@ -1,4 +1,5 @@
-obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
+/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/obj/local/armeabi-v7a/objs/nativeProcessing/native.o: \
+ /Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/jni/native.cpp \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/jni.h \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/cdefs.h \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/cdefs_elf.h \
@@ -11,8 +12,7 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/limits.h \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/limits.h \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/syslimits.h \
- /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/stdint.h \
- /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/machine/wchar_limits.h \
+ /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cstdint \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cmath \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/algorithm \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/version.hpp \
@@ -21,8 +21,6 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/cvstd.hpp \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cstddef \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cstring \
- /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cctype \
- /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/string \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/ptr.inl.hpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/hal.hpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/sse_utils.hpp \
@@ -30,13 +28,11 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/matx.hpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/types.hpp \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cfloat \
- /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/vector \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/mat.hpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/bufferpool.hpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/mat.inl.hpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/persistence.hpp \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/operations.hpp \
- /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cstdio \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/cvstd.inl.hpp \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/complex \
  /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/utility.hpp \
@@ -63,7 +59,7 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/android/log.h \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/iostream \
  /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/dirent.h \
- jni/RefocusingCoordinates.h
+ /Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/jni/RefocusingCoordinates.h
 
 /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/jni.h:
 
@@ -89,9 +85,7 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
 
 /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/syslimits.h:
 
-/Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/stdint.h:
-
-/Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/machine/wchar_limits.h:
+/Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cstdint:
 
 /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cmath:
 
@@ -109,10 +103,6 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
 
 /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cstring:
 
-/Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cctype:
-
-/Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/string:
-
 /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/ptr.inl.hpp:
 
 /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/hal.hpp:
@@ -127,8 +117,6 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
 
 /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cfloat:
 
-/Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/vector:
-
 /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/mat.hpp:
 
 /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/bufferpool.hpp:
@@ -138,8 +126,6 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
 /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/persistence.hpp:
 
 /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/operations.hpp:
-
-/Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/cstdio:
 
 /Users/joelwhang/AndroidStudioProjects/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/cvstd.inl.hpp:
 
@@ -193,4 +179,4 @@ obj/local/armeabi-v7a/objs/nativeProcessing/native.o: jni/native.cpp \
 
 /Users/joelwhang/AndroidStudioProjects/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/dirent.h:
 
-jni/RefocusingCoordinates.h:
+/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/jni/RefocusingCoordinates.h:

@@ -32,6 +32,7 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
 import com.wallerlab.processing.datasets.Dataset;
+import com.wallerlab.processing.tasks.ComputeFPMTask;
 import com.wallerlab.processing.tasks.ComputeRefocusTask;
 import com.wallerlab.processing.tasks.ComputeDPCRefocusTask;
 import com.wallerlab.compcellscope.AcquireActivity;
@@ -68,8 +69,9 @@ import android.widget.Toast;
 public class ComputationalCellScopeMain extends Activity{
   static{
       System.loadLibrary("opencv_java");
-//      System.loadLibrary("nativeLibrary");
       System.loadLibrary("nativeProcessing");
+//      System.loadLibrary("fpmProcessing");
+
   }
   private static final String TAG = "cCS_main";
   private static final boolean Debug = true;
@@ -116,7 +118,7 @@ public class ComputationalCellScopeMain extends Activity{
   final static String PREFS_NAME = "settings";
   final static String location_name = "location";
 
-  Button btnConnectBluetooth, btnSettings, btnAcquireFullScan,btnAcquireBFScan, btnAcquireMultiMode, btnMultiModeViewer, btnGallery, btnComputeRefocus, btnTestViewer;
+  Button btnConnectBluetooth, btnSettings, btnAcquireFullScan,btnAcquireBFScan, btnAcquireMultiMode, btnMultiModeViewer, btnGallery, btnComputeRefocus, btnTestViewer, btnFPMProcessing;
   TextView connStatusTextView, connDeviceNameTextView, connMACAddressTextView;
   Spinner ledArraySpinner;
 
@@ -282,7 +284,7 @@ public class ComputationalCellScopeMain extends Activity{
 
 		@Override
 		public void onClick(View v) {
-			startGallery();
+            startGallery();
 		}
 	});
     btnComputeRefocus = (Button) findViewById(R.id.btnComputeRefocus);
@@ -301,6 +303,18 @@ public class ComputationalCellScopeMain extends Activity{
         }
     });
 
+    btnFPMProcessing = (Button) findViewById(R.id.btnFPMProcessing);
+    btnFPMProcessing.setOnClickListener(new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+//            computeFPM(1);
+//            method(1);
+            int i = 0;
+            i += 1;
+            Log.i("CR", "FPM Computed");
+        }
+    });
   	}
 
   @Override
@@ -360,6 +374,7 @@ public class ComputationalCellScopeMain extends Activity{
                    mDataset.DATASET_PATH = chosenDir+"/";
                    Log.d(TAG, "CHOSEN DIR: " + chosenDir);
                    mDataset.buildFileListFromPath(chosenDir+"/");
+
                }
                else{
                    Toast.makeText(getApplicationContext(), "This file does not exist", Toast.LENGTH_LONG).show();
@@ -570,7 +585,9 @@ public class ComputationalCellScopeMain extends Activity{
   }
 
     /** Native Functions **/
-    public native int method(int i);
+    public native void method(int i);
+//    public native int computeFPM(int iterations);
+
 
 }
 

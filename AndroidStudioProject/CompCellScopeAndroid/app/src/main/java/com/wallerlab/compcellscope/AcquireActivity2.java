@@ -2,6 +2,7 @@ package com.wallerlab.compcellscope;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -32,16 +33,34 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.media.MediaScannerConnection;
 import android.hardware.camera2.DngCreator;
+import android.graphics.Bitmap;
 
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import java.io.BufferedWriter;
+
+
+
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
+
 
 
 import java.text.SimpleDateFormat;
@@ -58,6 +77,7 @@ import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -72,12 +92,22 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Rect;
 
 import com.wallerlab.compcellscope.bluetooth.BluetoothService;
 import com.wallerlab.compcellscope.dialogs.AcquireSettings;
 import com.wallerlab.compcellscope.dialogs.AcquireSettings.NoticeDialogListener;
 import com.wallerlab.compcellscope.surfaceviews.AcquireSurfaceView;
 import com.wallerlab.processing.datasets.Dataset;
+
+import static org.opencv.highgui.Highgui.imwrite;
+import static org.opencv.imgproc.Imgproc.COLOR_BayerGR2GRAY;
+import static org.opencv.imgproc.Imgproc.COLOR_BayerGR2RGB;
+import static org.opencv.imgproc.Imgproc.COLOR_BayerRG2GRAY;
+import static org.opencv.imgproc.Imgproc.cvtColor;
+
+
+
 
 public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
@@ -89,41 +119,37 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 //    }
     private HandlerThread thread;
     private static final boolean D = true;
-    private AcquireSurfaceView mPreview;
     private BluetoothService mBluetoothService = null;
     private String acquireType = "MultiMode";
-    Button btnSetup, btnAcquire;
-    private TextView acquireTextView;
-    private TextView acquireTextView2;
-    private TextView timeLeftTextView;
-    private ProgressBar acquireProgressBar;
+    Button btnSetup;
 
 
-    public double objectiveNA = 0.3;
+    public double objectiveNA = 0.1;
     public double brightfieldNA = 0.4; // Account for LED size to be sure we completly cover NA .025
 
     public int ledCount = 508;
     public int centerLED = 249;
 
-    public String fileName = "default";
+    private int w;
+    private int h;
+
     public boolean cameraReady = true;
     public int mmCount = 1;
     public float mmDelay = 0.0f;
     public int aecCompensation = 0;
     public String datasetName = "Dataset";
     public boolean usingHDR = false;
-    public boolean darkfieldAnnulus = true;
     public Dataset mDataset;
-    public int exposureTime = 1000000;
+    public int exposureTime = 2800000;
+
+
+    public Rect nRect= new Rect(0, 0, 100, 100);
 
     public DialogFragment settingsDialogFragment;
-    int mode = 1;
     private Size mImgSize;
 
-    /// break --- break --- break
 
     private File file;
-    int n = 0;
 
     private final static String TAG = "Camera2testJ";
     private Size mPreviewSize;
@@ -133,7 +159,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
     private CaptureRequest.Builder mPreviewBuilder;
     private CameraCaptureSession mPreviewSession;
 
-    private Button mBtnShot, mBtnShot2;
+    private Button mBtnShot;
 
     private ImageReader reader;
     private List<Surface> outputSurfaces;
@@ -144,6 +170,8 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
     private int index2;
     private DngCreator mDngCreator;
+
+    public final static int MASK = 0xff;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -160,6 +188,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         setContentView(R.layout.acquire_layout2);
 
 
+
         settingsDialogFragment = new AcquireSettings();
 
         mTextureView = (TextureView)findViewById(R.id.texture);
@@ -172,7 +201,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             @Override
             public void onClick(View v) {
 
-                objectiveNA = 1.0;
+                objectiveNA = .1;
                 new runScanningMode().execute();
             }
 
@@ -200,10 +229,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
     }
 
     protected void takePicture() {
-        Log.i("TP", Integer.toString(index2));
         cameraReady = false;
-        Log.e(TAG, "takePicture");
-        Log.i("YOCAM", "takePicture");
         if(null == mCameraDevice) {
             Log.e(TAG, "mCameraDevice is null, return");
             return;
@@ -211,7 +237,6 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
-            Log.i("YOCAM", "TRY WORKS");
             final CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraDevice.getId());
 
             Size[] imgSizes = null;
@@ -219,6 +244,11 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                 imgSizes = characteristics
                         .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
                         .getOutputSizes(ImageFormat.RAW_SENSOR);
+                StreamConfigurationMap scm = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                int[] formats = scm.getOutputFormats();
+                for (int i = 0; i < formats.length; i++) {
+                    Log.i("PXINFO", Integer.toString(formats[i]));
+                }
             }
             int width = 640;
             int height = 480;
@@ -226,8 +256,14 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                 width = imgSizes[0].getWidth();
                 height = imgSizes[0].getHeight();
             }
+            w = width;
+            h = height;
             mImgSize = imgSizes[0];
             reader = ImageReader.newInstance(width, height, ImageFormat.RAW_SENSOR, 1);
+//            reader = ImageReader.newInstance(100, 100, ImageFormat.RAW_SENSOR, 1);
+
+
+//
             outputSurfaces = new ArrayList<Surface>(2);
             outputSurfaces.add(reader.getSurface());
 
@@ -235,6 +271,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
             captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
+
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_MODE_OFF);
             captureBuilder.set(CaptureRequest.CONTROL_AE_ANTIBANDING_MODE, CameraMetadata.CONTROL_AE_ANTIBANDING_MODE_OFF);
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE,CameraMetadata.CONTROL_AE_MODE_OFF);
@@ -242,7 +279,10 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             captureBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CameraMetadata.CONTROL_EFFECT_MODE_OFF);
             captureBuilder.set(CaptureRequest.EDGE_MODE, CameraMetadata.EDGE_MODE_OFF);
             captureBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
+            captureBuilder.set(CaptureRequest.SCALER_CROP_REGION, nRect);
 
+
+            //set camera exposure time (default is 1000000 ns)
             captureBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, (long) exposureTime);
 
 
@@ -258,12 +298,68 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                     Image image = null;
                     try {
                         image = reader.acquireLatestImage();
-                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-                        byte[] bytes = new byte[buffer.capacity()];
+//
+                        BufferedWriter writer = null;
+//                        File image_txt = new File(file.getAbsolutePath());
+                        String path = "/CellScope/" + "FPMScan" + "_" + datasetName;
+                        file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
+                                "_scanning_" + String.format("%04d", index2) + ".txt");
 
-                        buffer.get(bytes);
-                        save(bytes);
-                        buffer.clear();
+
+
+                        ByteBuffer buf = image.getPlanes()[0].getBuffer();
+                        byte[] byteArr = new byte[w*h*2];
+
+                        String tag = "byteinfo";
+
+                        for (int i = 0; i < w*h*2 ; i++) {
+                            byteArr[i] = buf.get();
+                        }
+                        int[] cropped_img = new int[100*100];
+                        int x = 0;
+                        int y = 0;
+                        int idx = 0;
+                        for (int i = y; i < y+100; i++){
+                            for (int j = x; j < 200; j += 2){
+                                int byte1 = byteArr[i*w+j] & MASK;
+                                int byte2 = byteArr[i*w+j+1] & MASK;
+                                byte1 = byte1 << 8;
+                                int byte3 = byte1 | byte2;
+                                cropped_img[idx] = byte3;
+                                idx++;
+                            }
+                        }
+
+
+
+
+
+
+////
+
+//                        buf.wrap(byteArr);
+//                        byteArr = buf.wrap(byteArr);
+
+////                        buf.wrap(byteArr);
+//                        for (int i = (3280*1000+700)*2; i < (3280*1000+700)*2+3280*2; i++) {
+//                            Log.i(tag, "Index " + Integer.toString(i) + ": " + Byte.toString(byteArr[i]));
+//                            if (i%2 == 0) {
+//                                int byte1 = byteArr[i] & MASK;
+//                                int byte2 = byteArr[i+1] & MASK;
+//                                byte1 = byte1 << 8;
+//                                int byte3 = byte1 | byte2;
+//                                Log.i(tag, "Index " + Integer.toString(i) + ": " + Integer.toString(byte3));
+//                            }
+//                        }
+//                        buf.clear();
+//                        Mat m = new Mat(w, h, CvType.CV_16UC1);
+//                        m.put(0, 0, byteArr);
+//                        imwrite(file.getAbsolutePath(), m);
+//                        Highgui.imwrite(file, m);
+
+
+                        save(image);
+                        image.close();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -276,21 +372,13 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                     }
                 }
 
-                private void save(byte[] bytes) throws IOException {
-                    OutputStream output = null;
+                private void save(Image img) throws IOException {
                     try {
-                        output = new FileOutputStream(file);
-
-                        ByteBuffer buf = ByteBuffer.wrap(bytes);
-                        mDngCreator.writeByteBuffer(output, mImgSize, buf, 0);
-//                        output.write(bytes);
-                        output.close();
+                        mDngCreator.writeImage(new FileOutputStream(file.getAbsolutePath()), img);
+//                        mDngCreator.writeByteBuffer();
                     } finally {
-                        if (null != output) {
-                            output.close();
-                            cameraReady = true;
-                        }
-
+                        Log.i("PXINFO", "saved " + Integer.toString(index2));
+                        cameraReady = true;
                     }
                 }
 
@@ -389,6 +477,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         }
 
     };
+
 
     public void updateFileStructure(String currPath) {
         File f = new File(currPath);
@@ -510,8 +599,6 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         }
     }
 
-    // new methods -- new methods -- new methods -- new methods
-
     private class runScanningMode extends AsyncTask<Void, Void, Void>
     {
         //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
@@ -593,36 +680,47 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         protected Void doInBackground(Void... params) {
             Log.i("CAM2", "do in Background started");
             t = SystemClock.elapsedRealtime();
+            int nDF = 5;
+            final int exposureTimeBF = 2800000;
+            final int exposureTimeDF = nDF * exposureTimeBF;
+            exposureTime = 2800000;
+
 
             for (int index=1; index<=ledCount; index++) {
+//            for (int index=250; index<=250; index++) {
+
                 index2 = index;
                 Log.i("CAM2", Integer.toString(domeCoordinates[index-1][0]));
-                if (Math.sqrt(Math.sin((double)(domeCoordinates[index-1][2])/1000.0)*Math.sin((double)(domeCoordinates[index-1][2])/1000.0)+ Math.sin((double)(domeCoordinates[index-1][3])/1000.0)*Math.sin((double)(domeCoordinates[index-1][3])/1000.0)) < objectiveNA)
+
+                if (isBF(index)){
+                    exposureTime = exposureTimeBF;
+                    Log.i("BFINFO", Integer.toString(index) + " is BF");
+                } else {
+                    exposureTime = exposureTimeDF;
+                    Log.i("BFINFO", Integer.toString(index) + " is DF");
+                }
+                String cmd = String.format("dh,%d",index);
+                sendData(cmd);
+                mSleep(100);
+//                save image as DNG
+                String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",Locale.US).format(new Date());
+                file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
+                        timestamp + "_scanning_" + String.format("%04d", index) + ".dng");
+                Log.i("PXINFO", "doInBackground: " + file.getAbsolutePath());
+                captureImage();
+
+
+                while (!cameraReady)
                 {
-                    String cmd = String.format("dh,%d",index);
-                    sendData(cmd);
-                    mSleep(100);
-
-                    //Changeed .jpg to .YUV for faster save time? nah.
-                    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",Locale.US).format(new Date());
-                    file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
-                            timestamp + "_scanning_" + Integer.toString(index) + ".dng");
-                    Log.i("SKIPCAM", "doInBackground: " + file.getAbsolutePath());
-                    captureImage();
-
-//                    publishProgress();
-
-
-                    while (!cameraReady)
-                    {
-                        try {
-                            Thread.sleep(10);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
+                updateFileStructure(myDir.getAbsolutePath());
             }
+
 
 
 
@@ -640,10 +738,24 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
             //Clear the dome
             sendData("xx");
+            mDngCreator.close();
+            Log.i("PXINFO", "finished post execute");
+//            updateFileStructure(myDir.getAbsolutePath());
 
-            updateFileStructure(myDir.getAbsolutePath());
 
+        }
+    }
 
+    public boolean isBF(int holeNum){
+        int index = holeNum - 1;
+        double sin_theta_x = Math.sin(((double) domeCoordinates[index][2])/1000.0);
+        double sin_theta_y = Math.sin(((double) domeCoordinates[index][3])/1000.0);
+        double compNA = Math.sqrt(sin_theta_x*sin_theta_x + sin_theta_y*sin_theta_y);
+
+        if (compNA < .1) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -668,6 +780,44 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         }
 
     }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+
+    }
+
+    public void setHDR(boolean state)
+    {
+        if (state)
+            usingHDR = true;
+        else
+            usingHDR = false;
+    }
+
+    public void setDatasetName(String name)
+    {
+        datasetName = name;
+    }
+
+    public void setNA(float na)
+    {
+        brightfieldNA = na;
+        sendData(String.format("na,%d", (int) Math.round(na*100)));
+    }
+
+    public void setExposureTime(String expTime)
+    {
+        exposureTime = Integer.parseInt(expTime);
+        Log.i("DLOGCON", Integer.toString(exposureTime));
+    }
+
     // FORMAT: hole number,, channel, 1000*Theta_x, 1000*Theta_y
     static final int[][] domeCoordinates = new int[][]{
     /*  1*/ {1, 320, -113, -726 },
@@ -1179,40 +1329,4 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
     /*507*/ {507, 246, 186, 695 },
     /*508*/ {508, 183, 260, 695 }
     };
-
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-
-    }
-
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-
-    }
-
-    public void setHDR(boolean state)
-    {
-        if (state)
-            usingHDR = true;
-        else
-            usingHDR = false;
-    }
-
-    public void setDatasetName(String name)
-    {
-        datasetName = name;
-    }
-
-    public void setNA(float na)
-    {
-        brightfieldNA = na;
-        sendData(String.format("na,%d", (int) Math.round(na*100)));
-    }
-
-    public void setExposureTime(String expTime)
-    {
-        exposureTime = Integer.parseInt(expTime);
-        Log.i("DLOGCON", Integer.toString(exposureTime));
-    }
 }
