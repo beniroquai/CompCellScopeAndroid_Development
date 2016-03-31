@@ -40,7 +40,10 @@ void computeFocusDPC(vector<R_image> iStack, int fileCount, float z, int width, 
 
 JNIEXPORT void JNICALL Java_com_wallerlab_compcellscope_ComputeDPCRefocusTask_computeDPCRefocus(JNIEnv* env, jobject, jfloat zMin, jfloat zStep,
                                                                                                        jfloat zMax, jstring datasetRoot);
-JNIEXPORT void JNICALL Java_com_wallerlab_compcellscope_ComputationalCellScopeMain_method(JNIEnv* env, jobject, jint i);
+JNIEXPORT void JNICALL Java_com_wallerlab_compcellscope_ComputationalCellScopeMain_method(JNIEnv* env, jobject, jint i){
+    int j = i + 1;
+    return;
+}
 
 JNIEXPORT jdoubleArray JNICALL Java_com_wallerlab_processing_tasks_ComputePhaseHeightMap_computePhaseImage(JNIEnv* env, jobject, jlong addrInput);
 
@@ -165,9 +168,6 @@ int* meshgrid_x(int width){
     return mesh_x;
 }
 
-int method(int i){
-    return i+1;
-}
 
 int* meshgrid_y(int height){
     int * mesh_y = new int[height];
