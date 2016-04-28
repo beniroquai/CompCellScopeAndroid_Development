@@ -35,8 +35,9 @@ import android.media.MediaScannerConnection;
 import android.hardware.camera2.DngCreator;
 import android.graphics.Bitmap;
 
-
+import java.lang.*;
 import java.io.ByteArrayInputStream;
+import java.io.PrintWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -130,6 +131,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
     public int ledCount = 508;
     public int centerLED = 249;
 
+
     private int w;
     private int h;
 
@@ -140,7 +142,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
     public String datasetName = "Dataset";
     public boolean usingHDR = false;
     public Dataset mDataset;
-    public int exposureTime = 2800000;
+    public int exposureTime = 3200000;
 
 
     public Rect nRect= new Rect(0, 0, 100, 100);
@@ -150,6 +152,11 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
 
     private File file;
+    private File cropped_file;
+    private File dng_file;
+    private File txt_file;
+    private File full_image_file;
+    private File cropped_image_file;
 
     private final static String TAG = "Camera2testJ";
     private Size mPreviewSize;
@@ -298,68 +305,101 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                     Image image = null;
                     try {
                         image = reader.acquireLatestImage();
-//
-                        BufferedWriter writer = null;
-//                        File image_txt = new File(file.getAbsolutePath());
-                        String path = "/CellScope/" + "FPMScan" + "_" + datasetName;
-                        file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
-                                "_scanning_" + String.format("%04d", index2) + ".txt");
-
-
-
-                        ByteBuffer buf = image.getPlanes()[0].getBuffer();
-                        byte[] byteArr = new byte[w*h*2];
 
                         String tag = "byteinfo";
 
-                        for (int i = 0; i < w*h*2 ; i++) {
-                            byteArr[i] = buf.get();
-                        }
-                        int[] cropped_img = new int[100*100];
-                        int x = 0;
-                        int y = 0;
-                        int idx = 0;
-                        for (int i = y; i < y+100; i++){
-                            for (int j = x; j < 200; j += 2){
-                                int byte1 = byteArr[i*w+j] & MASK;
-                                int byte2 = byteArr[i*w+j+1] & MASK;
-                                byte1 = byte1 << 8;
-                                int byte3 = byte1 | byte2;
-                                cropped_img[idx] = byte3;
-                                idx++;
+                        ByteBuffer buf = image.getPlanes()[0].getBuffer();
+                        byte[] bytes = new byte[buf.remaining()];
+                        short[] blueIntChannel = new short[w*h/4];
+                        short[] blueIntChannelCropped= new short[100*100];
+                        short[] full_image_arr = new short[w*h];
+                        int blueIndex = 0;
+
+                        long t0 = System.currentTimeMillis();
+
+                        buf.get(bytes);
+//                        PrintWriter out = new PrintWriter(text_file);
+////                        Log.i(tag, "length of bytes is " + bytes.length);
+//                        for (int i = 0; i < bytes.length; i++) {
+//                            if (i%50 == 0) {
+//                                Log.i(tag, Integer.toString(i));
+//                            }
+//                            out.println(bytes[i]);
+//                            out.flush();
+//                        }
+
+
+
+                        long t1 = System.currentTimeMillis();
+                        Log.i(tag, "buf transfer time: " + Long.toString(t1 - t0));
+//
+//                        //grab only blue channel
+//                        for (int i = h/4-50; i < h/4+50; i++) {
+////                            Log.i(tag, "Index " + Integer.toString(i) + ": " + Byte.toString(bytes[i]) + " binary: " + String.format("%8s", Integer.toBinaryString(bytes[i] & 0xFF)).replace(' ', '0'));
+//                            for (int j = w/4-50; j < w/4+50; j++) {
+//                                int row = (i*2+1);
+//                                int column = (j*2+1)*2;
+//                                int index = (row*(w*2)+column);
+//                                int b1 = bytes[index] & 0xFF;
+//                                int b2 = bytes[index+1] & 0xFF;
+//                                Integer pValueInt = new Integer((b2 << 8) | b1);
+//                                Short pValue = pValueInt.shortValue();
+//                                blueIntChannel[blueIndex] = pValue;
+//                                blueIndex += 1;
+//                            }
+//                        }
+                        int idx1 = 0;
+
+                        for (int i = h/2-100; i < h/2+100; i++) {
+                            for (int j = w/2-100; j < w/2+100; j++) {
+                                int index = i*(w*2) + j*2;
+                                int b1 = bytes[index] & 0xFF;
+                                int b2 = bytes[index+1] & 0xFF;
+                                Integer pValueInt = new Integer((b2 << 8) | b1);
+                                Short pValue = pValueInt.shortValue();
+                                full_image_arr[idx1] = pValue;
+                                idx1++;
                             }
                         }
 
+//                        Mat full_image_mat = new Mat(h, w, CvType.CV_16UC1);
+//                        full_image_mat.put(0, 0, full_image_arr);
+//                        org.opencv.core.Rect fullROI = new org.opencv.core.Rect(full_image_mat.width()/2 - 100, full_image_mat.height()/2 - 100, 200, 200);
+//                        Mat cropped_image_mat = new Mat(full_image_mat, fullROI);
+//                        imwrite(full_image_file.getAbsolutePath(), full_image_mat);
+                        Mat cropped_image_mat = new Mat(200, 200, CvType.CV_16UC1);
+                        cropped_image_mat.put(0, 0, full_image_arr);
+
+                        imwrite(cropped_image_file.getAbsolutePath(), cropped_image_mat);
 
 
 
 
 
-////
 
-//                        buf.wrap(byteArr);
-//                        byteArr = buf.wrap(byteArr);
+                        long t2 = System.currentTimeMillis();
 
-////                        buf.wrap(byteArr);
-//                        for (int i = (3280*1000+700)*2; i < (3280*1000+700)*2+3280*2; i++) {
-//                            Log.i(tag, "Index " + Integer.toString(i) + ": " + Byte.toString(byteArr[i]));
-//                            if (i%2 == 0) {
-//                                int byte1 = byteArr[i] & MASK;
-//                                int byte2 = byteArr[i+1] & MASK;
-//                                byte1 = byte1 << 8;
-//                                int byte3 = byte1 | byte2;
-//                                Log.i(tag, "Index " + Integer.toString(i) + ": " + Integer.toString(byte3));
-//                            }
-//                        }
-//                        buf.clear();
-//                        Mat m = new Mat(w, h, CvType.CV_16UC1);
-//                        m.put(0, 0, byteArr);
-//                        imwrite(file.getAbsolutePath(), m);
-//                        Highgui.imwrite(file, m);
+                        Log.i(tag, "cropping time: " + Long.toString(t2 - t1));
+
+                        Mat blueC = new Mat(100, 100, CvType.CV_16UC1);
+                        blueC.put(0, 0, blueIntChannel);
+
+//                        org.opencv.core.Rect myROI = new org.opencv.core.Rect(blueC.width()/2 - 50, blueC.height()/2 - 50, 100, 100);
+//                        Mat croppedBlueC = new Mat(blueC, myROI);
+
+//                        imwrite(file.getAbsolutePath(), blueC);
+//                        imwrite(cropped_file.getAbsolutePath(), croppedBlueC);
+                        if (index2 == 249){
+                            save(image);
+                        }
 
 
-                        save(image);
+                        long t3 = System.currentTimeMillis();
+                        Log.i(tag, "saving time: " + Long.toString(t3 - t2));
+                        Log.i(tag, "total time: " + Long.toString(t3 - t1));
+
                         image.close();
+
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -368,17 +408,16 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                         if (image != null) {
                             image.close();
                             thread.quit();
+                            cameraReady = true;
                         }
                     }
                 }
 
                 private void save(Image img) throws IOException {
                     try {
-                        mDngCreator.writeImage(new FileOutputStream(file.getAbsolutePath()), img);
-//                        mDngCreator.writeByteBuffer();
+                        mDngCreator.writeImage(new FileOutputStream(dng_file.getAbsolutePath()), img);
                     } finally {
                         Log.i("PXINFO", "saved " + Integer.toString(index2));
-                        cameraReady = true;
                     }
                 }
 
@@ -681,13 +720,13 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             Log.i("CAM2", "do in Background started");
             t = SystemClock.elapsedRealtime();
             int nDF = 5;
-            final int exposureTimeBF = 2800000;
+            final int exposureTimeBF = 3200000;
             final int exposureTimeDF = nDF * exposureTimeBF;
-            exposureTime = 2800000;
+            exposureTime = 3200000;
 
 
             for (int index=1; index<=ledCount; index++) {
-//            for (int index=250; index<=250; index++) {
+//            for (int index=249; index<250; index++) {
 
                 index2 = index;
                 Log.i("CAM2", Integer.toString(domeCoordinates[index-1][0]));
@@ -702,11 +741,24 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                 String cmd = String.format("dh,%d",index);
                 sendData(cmd);
                 mSleep(100);
-//                save image as DNG
+
+//                save image as TIFF
                 String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",Locale.US).format(new Date());
-                file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
-                        timestamp + "_scanning_" + String.format("%04d", index) + ".dng");
+                dng_file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
+                        timestamp + "_scanning_" + "dng_image" + ".dng");
+                txt_file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
+                        timestamp + "_scanning_" + "dng_image" + ".txt");
+                file = new File(Environment.getExternalStorageDirectory()+path, "scanning_" + String.format("%04d", index) + ".tiff");
+                cropped_file =  new File(Environment.getExternalStorageDirectory()+path, "pic" +
+                        timestamp + "_scanning_cropped_" + String.format("%04d", index) +  ".tiff");
                 Log.i("PXINFO", "doInBackground: " + file.getAbsolutePath());
+                full_image_file =  new File(Environment.getExternalStorageDirectory()+path, "pic" +
+                        timestamp + "_full_scanning_" + String.format("%04d", index) +  ".tiff");
+                Log.i("PXINFO", "doInBackground: " + file.getAbsolutePath());
+                cropped_image_file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
+                        timestamp + "_full_cropped_" + String.format("%04d", index) +  ".tiff");
+                Log.i("PXINFO", "doInBackground: " + file.getAbsolutePath());
+
                 captureImage();
 
 
@@ -740,9 +792,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             sendData("xx");
             mDngCreator.close();
             Log.i("PXINFO", "finished post execute");
-//            updateFileStructure(myDir.getAbsolutePath());
-
-
+            updateFileStructure(myDir.getAbsolutePath());
         }
     }
 

@@ -308,10 +308,7 @@ public class ComputationalCellScopeMain extends Activity{
 
         @Override
         public void onClick(View v) {
-//            computeFPM(1);
             computeFPM(1);
-            int i = 0;
-            i += 1;
             Log.i("CR", "FPM Computed");
         }
     });
