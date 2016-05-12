@@ -152,7 +152,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
 
     private File file;
-    private File cropped_file;
+    private File blue_cropped_file;
     private File dng_file;
     private File txt_file;
     private File full_image_file;
@@ -333,33 +333,41 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                         long t1 = System.currentTimeMillis();
                         Log.i(tag, "buf transfer time: " + Long.toString(t1 - t0));
 //
-//                        //grab only blue channel
-//                        for (int i = h/4-50; i < h/4+50; i++) {
-////                            Log.i(tag, "Index " + Integer.toString(i) + ": " + Byte.toString(bytes[i]) + " binary: " + String.format("%8s", Integer.toBinaryString(bytes[i] & 0xFF)).replace(' ', '0'));
-//                            for (int j = w/4-50; j < w/4+50; j++) {
-//                                int row = (i*2+1);
-//                                int column = (j*2+1)*2;
-//                                int index = (row*(w*2)+column);
-//                                int b1 = bytes[index] & 0xFF;
-//                                int b2 = bytes[index+1] & 0xFF;
-//                                Integer pValueInt = new Integer((b2 << 8) | b1);
-//                                Short pValue = pValueInt.shortValue();
-//                                blueIntChannel[blueIndex] = pValue;
-//                                blueIndex += 1;
-//                            }
-//                        }
-                        int idx1 = 0;
-
+                        //grab only blue channel
                         for (int i = h/2-100; i < h/2+100; i++) {
+//                            Log.i(tag, "Index " + Integer.toString(i) + ": " + Byte.toString(bytes[i]) + " binary: " + String.format("%8s", Integer.toBinaryString(bytes[i] & 0xFF)).replace(' ', '0'));
                             for (int j = w/2-100; j < w/2+100; j++) {
+                                if (i%2 != 1 | j%2 != 1){
+                                    continue;
+                                }
                                 int index = i*(w*2) + j*2;
                                 int b1 = bytes[index] & 0xFF;
                                 int b2 = bytes[index+1] & 0xFF;
                                 Integer pValueInt = new Integer((b2 << 8) | b1);
                                 Short pValue = pValueInt.shortValue();
-                                full_image_arr[idx1] = pValue;
-                                idx1++;
+                                blueIntChannel[blueIndex] = pValue;
+                                blueIndex += 1;
                             }
+                        }
+
+                        if (index2==249) {
+                            int idx1 = 0;
+
+                            for (int i = h/2-100; i < h/2+100; i++) {
+                                for (int j = w / 2 - 100; j < w / 2 + 100; j++) {
+                                    int index = i * (w * 2) + j * 2;
+                                    int b1 = bytes[index] & 0xFF;
+                                    int b2 = bytes[index + 1] & 0xFF;
+                                    Integer pValueInt = new Integer((b2 << 8) | b1);
+                                    Short pValue = pValueInt.shortValue();
+                                    full_image_arr[idx1] = pValue;
+                                    idx1++;
+                                }
+                            }
+                            Mat cropped_image_mat = new Mat(200, 200, CvType.CV_16UC1);
+                            cropped_image_mat.put(0, 0, full_image_arr);
+                            imwrite(cropped_image_file.getAbsolutePath(), cropped_image_mat);
+
                         }
 
 //                        Mat full_image_mat = new Mat(h, w, CvType.CV_16UC1);
@@ -367,12 +375,12 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 //                        org.opencv.core.Rect fullROI = new org.opencv.core.Rect(full_image_mat.width()/2 - 100, full_image_mat.height()/2 - 100, 200, 200);
 //                        Mat cropped_image_mat = new Mat(full_image_mat, fullROI);
 //                        imwrite(full_image_file.getAbsolutePath(), full_image_mat);
-                        Mat cropped_image_mat = new Mat(200, 200, CvType.CV_16UC1);
-                        cropped_image_mat.put(0, 0, full_image_arr);
-
-                        imwrite(cropped_image_file.getAbsolutePath(), cropped_image_mat);
-
-
+//                        Mat cropped_image_mat = new Mat(200, 200, CvType.CV_16UC1);
+//                        cropped_image_mat.put(0, 0, full_image_arr);
+//
+//                        imwrite(cropped_image_file.getAbsolutePath(), cropped_image_mat);
+//
+//
 
 
 
@@ -384,11 +392,8 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                         Mat blueC = new Mat(100, 100, CvType.CV_16UC1);
                         blueC.put(0, 0, blueIntChannel);
 
-//                        org.opencv.core.Rect myROI = new org.opencv.core.Rect(blueC.width()/2 - 50, blueC.height()/2 - 50, 100, 100);
-//                        Mat croppedBlueC = new Mat(blueC, myROI);
-
-//                        imwrite(file.getAbsolutePath(), blueC);
-//                        imwrite(cropped_file.getAbsolutePath(), croppedBlueC);
+                        imwrite(blue_cropped_file.getAbsolutePath(), blueC);
+//                        imwrite(cropped_file.getAbsolutePath(), blueC);
                         if (index2 == 249){
                             save(image);
                         }
@@ -749,8 +754,8 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                 txt_file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
                         timestamp + "_scanning_" + "dng_image" + ".txt");
                 file = new File(Environment.getExternalStorageDirectory()+path, "scanning_" + String.format("%04d", index) + ".tiff");
-                cropped_file =  new File(Environment.getExternalStorageDirectory()+path, "pic" +
-                        timestamp + "_scanning_cropped_" + String.format("%04d", index) +  ".tiff");
+                blue_cropped_file =  new File(Environment.getExternalStorageDirectory()+path, "scanning_blue_cropped_" +
+                        String.format("%04d", index) +  ".tiff");
                 Log.i("PXINFO", "doInBackground: " + file.getAbsolutePath());
                 full_image_file =  new File(Environment.getExternalStorageDirectory()+path, "pic" +
                         timestamp + "_full_scanning_" + String.format("%04d", index) +  ".tiff");

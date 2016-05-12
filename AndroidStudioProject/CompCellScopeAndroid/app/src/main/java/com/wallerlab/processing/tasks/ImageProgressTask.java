@@ -52,7 +52,7 @@ public abstract class ImageProgressTask extends AsyncTask<Dataset, Integer, Void
 
     @Override
     protected void onPreExecute() {
-        progressDialog.show();
+//        progressDialog.show();
     }
 
     @Override

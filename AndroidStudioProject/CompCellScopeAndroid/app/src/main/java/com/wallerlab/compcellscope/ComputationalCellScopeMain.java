@@ -295,10 +295,16 @@ public class ComputationalCellScopeMain extends Activity{
         public void onClick(View v) {
             Log.i("DPC", mDataset.DATASET_PATH);
 
+//
+//            Log.i("testing fpm", "fpm onClick");
+//
+//            chooseDirectory();
+//            Log.i("testing fpm", "Directory Chosen");
+
 	        if (mDataset.DATASET_PATH != "")
 	        	new ComputeRefocusTask(ComputationalCellScopeMain.this).execute(mDataset);
 	        else
-	        	chooseDatasetDirectory();
+                chooseDirectory();
             Log.i("CR", "End btnComputeRefocus");
         }
     });
@@ -308,6 +314,7 @@ public class ComputationalCellScopeMain extends Activity{
 
         @Override
         public void onClick(View v) {
+            Log.i("CR", "clicked btnFPMProcessing");
             computeFPM(1);
             Log.i("CR", "FPM Computed");
         }
@@ -389,6 +396,32 @@ public class ComputationalCellScopeMain extends Activity{
        directoryChooserDialog.chooseDirectory(m_chosenDir);
        m_newFolderEnabled = ! m_newFolderEnabled;
    }
+    public void chooseDirectory()
+    {
+        final String m_chosenDir = "";
+        boolean m_newFolderEnabled = true;
+//		final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+
+        // Create DirectoryChooserDialog and register a callback
+        DirectoryChooserDialog directoryChooserDialog =
+                new DirectoryChooserDialog(ComputationalCellScopeMain.this,
+                        new DirectoryChooserDialog.ChosenDirectoryListener()
+                        {
+                            @Override
+                            public void onChosenDir(String chosenDir)
+                            {
+                                Log.i("fpm testing", "chosenDir is: " + chosenDir);
+//                                computeFPM(1);
+                            }
+                        });
+        // Toggle new folder button enabling
+//        directoryChooserDialog.setNewFolderEnabled(m_newFolderEnabled);
+        // Load directory chooser dialog for initial 'm_chosenDir' directory.
+        // The registered callback will be called upon final directory selection.
+//        directoryChooserDialog.chooseDirectory(m_chosenDir);
+    }
+
+
 
   protected void startGallery(){
       final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
