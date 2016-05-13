@@ -267,10 +267,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             h = height;
             mImgSize = imgSizes[0];
             reader = ImageReader.newInstance(width, height, ImageFormat.RAW_SENSOR, 1);
-//            reader = ImageReader.newInstance(100, 100, ImageFormat.RAW_SENSOR, 1);
 
-
-//
             outputSurfaces = new ArrayList<Surface>(2);
             outputSurfaces.add(reader.getSurface());
 
@@ -279,6 +276,8 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
 
+
+            // Camera settings
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_MODE_OFF);
             captureBuilder.set(CaptureRequest.CONTROL_AE_ANTIBANDING_MODE, CameraMetadata.CONTROL_AE_ANTIBANDING_MODE_OFF);
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE,CameraMetadata.CONTROL_AE_MODE_OFF);
@@ -306,36 +305,18 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                     try {
                         image = reader.acquireLatestImage();
 
-                        String tag = "byteinfo";
-
                         ByteBuffer buf = image.getPlanes()[0].getBuffer();
-                        byte[] bytes = new byte[buf.remaining()];
-                        short[] blueIntChannel = new short[w*h/4];
-                        short[] blueIntChannelCropped= new short[100*100];
-                        short[] full_image_arr = new short[w*h];
+                        byte[] bytes = new byte[buf.remaining()]; // bytes contains the raw bytes from the image
+                        short[] blueIntChannel = new short[w*h/4]; // The entire image, blue channel only
+                        short[] blueIntChannelCropped= new short[100*100]; // 100x100 region in the center, blue channel only
+                        short[] full_image_arr = new short[w*h]; // entire image, all color channels
                         int blueIndex = 0;
 
-                        long t0 = System.currentTimeMillis();
-
                         buf.get(bytes);
-//                        PrintWriter out = new PrintWriter(text_file);
-////                        Log.i(tag, "length of bytes is " + bytes.length);
-//                        for (int i = 0; i < bytes.length; i++) {
-//                            if (i%50 == 0) {
-//                                Log.i(tag, Integer.toString(i));
-//                            }
-//                            out.println(bytes[i]);
-//                            out.flush();
-//                        }
 
-
-
-                        long t1 = System.currentTimeMillis();
-                        Log.i(tag, "buf transfer time: " + Long.toString(t1 - t0));
 //
                         //grab only blue channel
                         for (int i = h/2-100; i < h/2+100; i++) {
-//                            Log.i(tag, "Index " + Integer.toString(i) + ": " + Byte.toString(bytes[i]) + " binary: " + String.format("%8s", Integer.toBinaryString(bytes[i] & 0xFF)).replace(' ', '0'));
                             for (int j = w/2-100; j < w/2+100; j++) {
                                 if (i%2 != 1 | j%2 != 1){
                                     continue;
@@ -343,13 +324,13 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                                 int index = i*(w*2) + j*2;
                                 int b1 = bytes[index] & 0xFF;
                                 int b2 = bytes[index+1] & 0xFF;
-                                Integer pValueInt = new Integer((b2 << 8) | b1);
+                                Integer pValueInt = new Integer((b2 << 8) | b1); // little-endian
                                 Short pValue = pValueInt.shortValue();
                                 blueIntChannel[blueIndex] = pValue;
                                 blueIndex += 1;
                             }
                         }
-
+                        // for led 249, we grab all rgb pixels in the middle and save them (for reference)
                         if (index2==249) {
                             int idx1 = 0;
 
@@ -364,45 +345,23 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                                     idx1++;
                                 }
                             }
+
+                            // save the entire image for led 249
                             Mat cropped_image_mat = new Mat(200, 200, CvType.CV_16UC1);
                             cropped_image_mat.put(0, 0, full_image_arr);
                             imwrite(cropped_image_file.getAbsolutePath(), cropped_image_mat);
-
                         }
-
-//                        Mat full_image_mat = new Mat(h, w, CvType.CV_16UC1);
-//                        full_image_mat.put(0, 0, full_image_arr);
-//                        org.opencv.core.Rect fullROI = new org.opencv.core.Rect(full_image_mat.width()/2 - 100, full_image_mat.height()/2 - 100, 200, 200);
-//                        Mat cropped_image_mat = new Mat(full_image_mat, fullROI);
-//                        imwrite(full_image_file.getAbsolutePath(), full_image_mat);
-//                        Mat cropped_image_mat = new Mat(200, 200, CvType.CV_16UC1);
-//                        cropped_image_mat.put(0, 0, full_image_arr);
-//
-//                        imwrite(cropped_image_file.getAbsolutePath(), cropped_image_mat);
-//
-//
-
-
-
-
-                        long t2 = System.currentTimeMillis();
-
-                        Log.i(tag, "cropping time: " + Long.toString(t2 - t1));
 
                         Mat blueC = new Mat(100, 100, CvType.CV_16UC1);
                         blueC.put(0, 0, blueIntChannel);
 
+                        // save the cropped blue channel
                         imwrite(blue_cropped_file.getAbsolutePath(), blueC);
-//                        imwrite(cropped_file.getAbsolutePath(), blueC);
+
+                        // for led 249, save the entire image, all color channels
                         if (index2 == 249){
-                            save(image);
+                            save_full_image(image);
                         }
-
-
-                        long t3 = System.currentTimeMillis();
-                        Log.i(tag, "saving time: " + Long.toString(t3 - t2));
-                        Log.i(tag, "total time: " + Long.toString(t3 - t1));
-
                         image.close();
 
                     } catch (FileNotFoundException e) {
@@ -418,7 +377,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                     }
                 }
 
-                private void save(Image img) throws IOException {
+                private void save_full_image(Image img) throws IOException {
                     try {
                         mDngCreator.writeImage(new FileOutputStream(dng_file.getAbsolutePath()), img);
                     } finally {
@@ -463,8 +422,6 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
                 }
             }, backgroudHandler);
-
-
 
             outputSurfaces.clear();
         } catch (CameraAccessException e) {
@@ -648,8 +605,8 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
         int centerCount = 0;
         long t = 0;
-        int n = 0;
 
+        // Creat new directory for new dataset
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",Locale.US).format(new Date());
         String path = "/CellScope/" + "FPMScan" + "_" + datasetName + "_" + timestamp;
         File myDir = new File(Environment.getExternalStorageDirectory()+ path);
@@ -712,6 +669,8 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         @Override
         protected void onProgressUpdate(Void...params)
         {
+            // Old Vestigial code...
+
 //            acquireProgressBar.setProgress(n);
 //            long elapsed = SystemClock.elapsedRealtime() - t;
 //            t = SystemClock.elapsedRealtime();
@@ -729,13 +688,12 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
             final int exposureTimeDF = nDF * exposureTimeBF;
             exposureTime = 3200000;
 
-
             for (int index=1; index<=ledCount; index++) {
-//            for (int index=249; index<250; index++) {
-
                 index2 = index;
                 Log.i("CAM2", Integer.toString(domeCoordinates[index-1][0]));
 
+                // If the LED is in darkfield, set the exposure time to a multiple of the default
+                // exposure time
                 if (isBF(index)){
                     exposureTime = exposureTimeBF;
                     Log.i("BFINFO", Integer.toString(index) + " is BF");
@@ -743,11 +701,13 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                     exposureTime = exposureTimeDF;
                     Log.i("BFINFO", Integer.toString(index) + " is DF");
                 }
+
+                // send the command to light up the specified led
                 String cmd = String.format("dh,%d",index);
                 sendData(cmd);
                 mSleep(100);
 
-//                save image as TIFF
+                // initialize file names for this LED
                 String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",Locale.US).format(new Date());
                 dng_file = new File(Environment.getExternalStorageDirectory()+path, "pic" +
                         timestamp + "_scanning_" + "dng_image" + ".dng");
@@ -766,7 +726,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
 
                 captureImage();
 
-
+                // wait for camera to be ready
                 while (!cameraReady)
                 {
                     try {
@@ -775,6 +735,8 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
                         e.printStackTrace();
                     }
                 }
+
+                // update the FileStructure so images are properly saved on the file system
                 updateFileStructure(myDir.getAbsolutePath());
             }
 
@@ -787,9 +749,7 @@ public class AcquireActivity2 extends Activity implements NoticeDialogListener {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-//            acquireProgressBar.setVisibility(View.INVISIBLE); // Make invisible at first, then have it pop up
-            // Turn on the center LED
-            //String cmd = String.format("p%d", centerLED);
+            //Turn on all LEDs
             String cmd = "bf";
             sendData(cmd);
 

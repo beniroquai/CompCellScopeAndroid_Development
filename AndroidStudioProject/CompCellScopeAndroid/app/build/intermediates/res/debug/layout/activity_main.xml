@@ -106,7 +106,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="180dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -133,16 +133,8 @@
             android:id="@+id/grid">
 
             <Button
-                android:id="@+id/btnComputeRefocus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Compute Refocus"
-                android:layout_row="0"
-                android:layout_column="0" />
-
-            <Button
                 android:id="@+id/btnGallery"
-                android:layout_width="168dp"
+                android:layout_width="313dp"
                 android:layout_height="wrap_content"
                 android:text="View Dataset"
                 android:layout_gravity="center_horizontal|left"
@@ -150,15 +142,7 @@
                 android:layout_column="1" />
 
             <Button
-                android:layout_width="168dp"
-                android:layout_height="wrap_content"
-                android:text="Refocusing"
-                android:id="@+id/btnTestViewer"
-                android:layout_row="1"
-                android:layout_column="0" />
-
-            <Button
-                android:layout_width="168dp"
+                android:layout_width="313dp"
                 android:layout_height="wrap_content"
                 android:text="qDPC"
                 android:id="@+id/btnQDPC"
@@ -169,7 +153,7 @@
         </GridLayout>
 
         <Button
-            android:layout_width="fill_parent"
+            android:layout_width="313dp"
             android:layout_height="wrap_content"
             android:text="FPM PP"
             android:id="@+id/btnFPMProcessing"

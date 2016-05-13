@@ -25,22 +25,16 @@
 package com.wallerlab.compcellscope;
 
 import java.io.File;
-import java.io.FileFilter;
+import java.util.ArrayList;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
 import com.wallerlab.processing.datasets.Dataset;
-import com.wallerlab.processing.tasks.ComputeFPMTask;
-import com.wallerlab.processing.tasks.ComputeRefocusTask;
-import com.wallerlab.processing.tasks.ComputeDPCRefocusTask;
-import com.wallerlab.compcellscope.AcquireActivity;
-import com.wallerlab.compcellscope.MultiModeViewActivity;
 import com.wallerlab.compcellscope.bluetooth.BluetoothDeviceListActivity;
 import com.wallerlab.compcellscope.bluetooth.BluetoothService;
 import com.wallerlab.compcellscope.dialogs.DirectoryChooserDialog;
-import com.wallerlab.compcellscope.TestViewerActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -52,6 +46,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -118,9 +113,9 @@ public class ComputationalCellScopeMain extends Activity{
   final static String PREFS_NAME = "settings";
   final static String location_name = "location";
 
-  Button btnConnectBluetooth, btnSettings, btnAcquireFullScan,btnAcquireBFScan, btnAcquireMultiMode, btnMultiModeViewer, btnGallery, btnComputeRefocus, btnTestViewer, btnFPMProcessing;
+  Button btnConnectBluetooth, btnAcquireFullScan, btnAcquireBFScan, btnAcquireMultiMode,
+          btnMultiModeViewer, btnGallery, btnFPMProcessing;
   TextView connStatusTextView, connDeviceNameTextView, connMACAddressTextView;
-  Spinner ledArraySpinner;
 
   protected void startBluetooth() {
       if (!mBluetoothAdapter.isEnabled()) {
@@ -160,33 +155,33 @@ public class ComputationalCellScopeMain extends Activity{
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
 
-    OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this, mLoaderCallback);
+      OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this, mLoaderCallback);
 
-    btnMultiModeViewer = (Button) findViewById(R.id.btnMultiModeViewer);
-    btnTestViewer = (Button) findViewById(R.id.btnTestViewer);
-    btnConnectBluetooth = (Button) findViewById(R.id.btnConnectBluetooth);
-    btnAcquireBFScan = (Button) findViewById(R.id.btnAcquireBFScan);
-    btnAcquireFullScan = (Button) findViewById(R.id.btnAcquireFullScan);
-    btnAcquireMultiMode = (Button) findViewById(R.id.btnAcquireMuitimode);
-    btnGallery = (Button) findViewById(R.id.btnGallery);
+      btnMultiModeViewer = (Button) findViewById(R.id.btnMultiModeViewer);
+      btnConnectBluetooth = (Button) findViewById(R.id.btnConnectBluetooth);
+      btnAcquireBFScan = (Button) findViewById(R.id.btnAcquireBFScan);
+      btnAcquireFullScan = (Button) findViewById(R.id.btnAcquireFullScan);
+      btnAcquireMultiMode = (Button) findViewById(R.id.btnAcquireMuitimode);
+      btnFPMProcessing = (Button) findViewById(R.id.btnFPMProcessing);
+      btnGallery = (Button) findViewById(R.id.btnGallery);
 
-    connStatusTextView = (TextView) findViewById(R.id.connStatusTextView);
-    connDeviceNameTextView = (TextView) findViewById(R.id.connDeviceNameTextView);
-    connMACAddressTextView = (TextView) findViewById(R.id.connMACAddressTextView);
+      connStatusTextView = (TextView) findViewById(R.id.connStatusTextView);
+      connDeviceNameTextView = (TextView) findViewById(R.id.connDeviceNameTextView);
+      connMACAddressTextView = (TextView) findViewById(R.id.connMACAddressTextView);
 
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-    // Get local Bluetooth adapter
-    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+      // Get local Bluetooth adapter
+      mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    // If the adapter is null, then Bluetooth is not supported
-    if (mBluetoothAdapter == null) {
-        Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
-        finish();
-        return;
+      // If the adapter is null, then Bluetooth is not supported
+      if (mBluetoothAdapter == null) {
+          Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+          finish();
+          return;
     }
 
     // Create the BT service object
@@ -237,48 +232,24 @@ public class ComputationalCellScopeMain extends Activity{
 
     btnAcquireFullScan.setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
-//        	startAcquireActivity("Full_Scan");
-
+        	startAcquireActivity("Full_Scan");
             Intent intent = new Intent(ComputationalCellScopeMain.this, AcquireActivity2.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-
         }
       });
 
     btnAcquireMultiMode.setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
         	startAcquireActivity("MultiMode");
-
         }
     });
 
     btnMultiModeViewer.setOnClickListener(new OnClickListener() {
         public void onClick(View v) {
-
         	startMultiViewerActivity();
-
-
         }
     });
-
-
-
-    //Test button for qDPC and refocusing
-    btnTestViewer.setOnClickListener(new OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            mDataset.DPC_ZMAX = 100;
-            mDataset.DPC_ZMIN = -100;
-            mDataset.DPC_ZSTEP = 10;
-            mDataset.DPC_FOCUS_DATASET_ROOT = "/CellScope/sample_data";
-
-            new ComputeDPCRefocusTask(ComputationalCellScopeMain.this).execute(mDataset);
-
-        }
-    });
-
-
 
     btnGallery.setOnClickListener(new OnClickListener() {
 
@@ -287,29 +258,8 @@ public class ComputationalCellScopeMain extends Activity{
             startGallery();
 		}
 	});
-    btnComputeRefocus = (Button) findViewById(R.id.btnComputeRefocus);
-    btnComputeRefocus.setOnClickListener(new View.OnClickListener() {
 
 
-        @Override
-        public void onClick(View v) {
-            Log.i("DPC", mDataset.DATASET_PATH);
-
-//
-//            Log.i("testing fpm", "fpm onClick");
-//
-//            chooseDirectory();
-//            Log.i("testing fpm", "Directory Chosen");
-
-	        if (mDataset.DATASET_PATH != "")
-	        	new ComputeRefocusTask(ComputationalCellScopeMain.this).execute(mDataset);
-	        else
-                chooseDirectory();
-            Log.i("CR", "End btnComputeRefocus");
-        }
-    });
-
-    btnFPMProcessing = (Button) findViewById(R.id.btnFPMProcessing);
     btnFPMProcessing.setOnClickListener(new View.OnClickListener() {
 
         @Override
@@ -317,6 +267,7 @@ public class ComputationalCellScopeMain extends Activity{
             Log.i("CR", "clicked btnFPMProcessing");
             computeFPM(1);
             Log.i("CR", "FPM Computed");
+            updateFileStructure("/storage/emulated/0/CellScope/FPM_results/");
         }
     });
   	}
@@ -396,32 +347,6 @@ public class ComputationalCellScopeMain extends Activity{
        directoryChooserDialog.chooseDirectory(m_chosenDir);
        m_newFolderEnabled = ! m_newFolderEnabled;
    }
-    public void chooseDirectory()
-    {
-        final String m_chosenDir = "";
-        boolean m_newFolderEnabled = true;
-//		final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        // Create DirectoryChooserDialog and register a callback
-        DirectoryChooserDialog directoryChooserDialog =
-                new DirectoryChooserDialog(ComputationalCellScopeMain.this,
-                        new DirectoryChooserDialog.ChosenDirectoryListener()
-                        {
-                            @Override
-                            public void onChosenDir(String chosenDir)
-                            {
-                                Log.i("fpm testing", "chosenDir is: " + chosenDir);
-//                                computeFPM(1);
-                            }
-                        });
-        // Toggle new folder button enabling
-//        directoryChooserDialog.setNewFolderEnabled(m_newFolderEnabled);
-        // Load directory chooser dialog for initial 'm_chosenDir' directory.
-        // The registered callback will be called upon final directory selection.
-//        directoryChooserDialog.chooseDirectory(m_chosenDir);
-    }
-
-
 
   protected void startGallery(){
       final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -613,6 +538,26 @@ public class ComputationalCellScopeMain extends Activity{
           mBluetoothService.write(send);
       }
   }
+    public void updateFileStructure(String currPath) {
+        File f = new File(currPath);
+        File[] fileList = f.listFiles();
+        ArrayList<String> arrayFiles = new ArrayList<String>();
+        if (!(fileList.length == 0))
+        {
+            for (int i=0; i<fileList.length; i++)
+                arrayFiles.add(currPath+"/"+fileList[i].getName());
+        }
+
+        String[] fileListString = new String[arrayFiles.size()];
+        fileListString = arrayFiles.toArray(fileListString);
+        MediaScannerConnection.scanFile(ComputationalCellScopeMain.this,
+                fileListString, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                    }
+                });
+    }
+
 
     /** Native Functions **/
 //    public native void method(int i);
