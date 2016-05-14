@@ -152,8 +152,8 @@
       <file leaf-file-name="ComputationalCellScopeMain.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wallerlab/compcellscope/ComputationalCellScopeMain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.111111">
-              <caret line="269" column="77" selection-start-line="269" selection-start-column="77" selection-end-line="269" selection-end-column="77" />
+            <state vertical-scroll-proportion="-52.11111">
+              <caret line="269" column="67" selection-start-line="269" selection-start-column="63" selection-end-line="269" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -163,7 +163,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wallerlab/compcellscope/AcquireActivity2.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-6.0">
-              <caret line="759" column="31" selection-start-line="759" selection-start-column="12" selection-end-line="759" selection-end-column="31" />
+              <caret line="610" column="22" selection-start-line="610" selection-start-column="22" selection-end-line="610" selection-end-column="86" />
               <folding />
             </state>
           </provider>
@@ -172,8 +172,8 @@
       <file leaf-file-name="fpmMain.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/jni/fpmMain.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.7098765">
-              <caret line="368" column="20" selection-start-line="368" selection-start-column="14" selection-end-line="368" selection-end-column="20" />
+            <state vertical-scroll-proportion="-2.2407408">
+              <caret line="613" column="24" selection-start-line="613" selection-start-column="24" selection-end-line="613" selection-end-column="93" />
               <folding />
             </state>
           </provider>
@@ -3042,18 +3042,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/jni/fpmMain.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="9" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/com/android/server/am/ActivityStack.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1" column="21" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/jni/fpmMain.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="9" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
           <folding />
         </state>
       </provider>
@@ -3066,26 +3066,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wallerlab/compcellscope/AcquireActivity2.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wallerlab/compcellscope/ComputationalCellScopeMain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.0">
-          <caret line="759" column="31" selection-start-line="759" selection-start-column="12" selection-end-line="759" selection-end-column="31" />
+        <state vertical-scroll-proportion="-52.11111">
+          <caret line="269" column="67" selection-start-line="269" selection-start-column="63" selection-end-line="269" selection-end-column="67" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wallerlab/compcellscope/ComputationalCellScopeMain.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wallerlab/compcellscope/AcquireActivity2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.111111">
-          <caret line="269" column="77" selection-start-line="269" selection-start-column="77" selection-end-line="269" selection-end-column="77" />
+        <state vertical-scroll-proportion="-6.0">
+          <caret line="610" column="22" selection-start-line="610" selection-start-column="22" selection-end-line="610" selection-end-column="86" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/jni/fpmMain.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.7098765">
-          <caret line="368" column="20" selection-start-line="368" selection-start-column="14" selection-end-line="368" selection-end-column="20" />
+        <state vertical-scroll-proportion="-2.2407408">
+          <caret line="613" column="24" selection-start-line="613" selection-start-column="24" selection-end-line="613" selection-end-column="93" />
           <folding />
         </state>
       </provider>

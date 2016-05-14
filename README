@@ -1,0 +1,29 @@
+The Current State of the ANDROID CELLSCOPE app:
+
+
+The Big Bug in the FPM Code
+====================================================================
+
+There's a bug in the FPM Code that produces a zero-filled post-proccessed image (for both the real and imaginary parts). The bug seems to be in runFPM, since I am pretty sure the bug is not in loadFPMDataset (I saved the images in from loadFPMDataset to disk, and they are the same images in the dataset). Perhaps the best way of debugging this is to make print statements in the same places between the CPU FPM code and the ANDROID FPM code, and see if print statements are different.
+
+
+The current state of the CELLSCOPE ANDROID project is the following:
+====================================================================
+
+Through acquiring the datset for Fourier Ptychography, the Cellscope saves 508 images (for 508 leds) to a new directory /storage/emulated/0//CellScope/FPMScan_dataset_<timestamp>. However, the FPM PP button (stands for Fourier Ptychography Post Processing) runs FPM on a dataset in the directory in /storage/emulated/0/CellScope/FPM_Sample/ and writes the results to /storage/emulated/0/CellScope/FPM_results/.
+
+
+Improvements that could be made:
+====================================================================
+
+-Going on forward, we would like work on allowing FPM to run on any directory of our choosing, and write the result to a directory of our choosing. This should be the next immediate step in the project.
+
+-Futher down the road, image cropping can be improved. Currently, the images are cropped at a 100x100 region in the center of the picture. However, it would be ideal to be able to crop any region of the picture. This will require considerable UI work, but we want the end result of the app to have this feature.
+
+
+BUGS & other Inconveniences
+====================================================================
+
+- Currently, all the data from the JSON files for FPM is being manually inserted under the function Java_com_wallerlab_compcellscope_ComputationalCellScopeMain_computeFPM. Ideally, we'd be able to pass the JSON into fpmMain.cpp - however, I've been unable to figure out how to do this in the NDK.
+- native.cpp used to be a refocusing algortihm - However, due to my stupidity, I tried to hack on FPM onto the button that called the refocusing function. Thus, native.cpp is no longer called and is some vestigial code that is floating around. I kept it around just in case I want to use refocusing again.
+

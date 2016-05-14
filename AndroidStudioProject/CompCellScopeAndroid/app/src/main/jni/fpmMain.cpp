@@ -140,13 +140,6 @@ int16_t loadFPMDataset(FPM_Dataset *dataset) {
         __android_log_print(ANDROID_LOG_INFO, "FPMPP", "filename is %s:", fileName.c_str());
 
         fullImg = imread(dataset->datasetRoot + fileName, CV_16UC1);
-        __android_log_print(ANDROID_LOG_INFO, "FPMPP", "pix values are %d", fullImg.at<int>(50, 50));
-        if (holeNum == "249" || holeNum == "0249"){
-            char test[FILENAME_LENGTH];
-            snprintf(test,sizeof(test), "/storage/emulated/0/CellScope/FPM_results/test249.tiff");
-            imwrite(test, fullImg);
-            __android_log_print(ANDROID_LOG_INFO, "FPMPP", "saved test img");
-        }
 
 
         // Populate fields of FPMImage class
@@ -562,8 +555,8 @@ void runFPM(FPM_Dataset *dataset) {
 
   char obj_filename[FILENAME_LENGTH];
   char obji_filename[FILENAME_LENGTH];
-  snprintf(obj_filename,sizeof(obj_filename), "/storage/emulated/0/CellScope/FPM_results/object_real.tiff");
-  snprintf(obji_filename,sizeof(obj_filename), "/storage/emulated/0/CellScope/FPM_results/object_imaginary.tiff");
+  snprintf(obj_filename,sizeof(obj_filename), "/storage/emulated/0/CellScope/FPM_results/object_real.jpg");
+  snprintf(obji_filename,sizeof(obj_filename), "/storage/emulated/0/CellScope/FPM_results/object_imaginary.jpg");
 
   vector<Mat> complexChannels;
   split(dataset->objCrop, complexChannels);
@@ -574,7 +567,7 @@ void runFPM(FPM_Dataset *dataset) {
   __android_log_print(ANDROID_LOG_INFO, "FPMPP", "complexChannels types is %d", complexChannels[0].type());
   imwrite(obj_filename, complexChannels[0]);
   imwrite(obji_filename, complexChannels[1]);
-  complex_imwrite("/storage/emulated/0/CellScope/FPM_results/complexImage.tiff", dataset->objCrop);
+  complex_imwrite("/storage/emulated/0/CellScope/FPM_results/complexImage.jpg", dataset->objCrop);
 
 
 
