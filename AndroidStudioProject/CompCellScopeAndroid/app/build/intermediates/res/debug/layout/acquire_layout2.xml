@@ -32,4 +32,4 @@
         android:layout_alignTop="@+id/btn_takepicture"
         android:layout_alignParentEnd="true" />
 
-</RelativeLayout><!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/layout/acquire_layout2.xml -->
+</RelativeLayout><!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/layout/acquire_layout2.xml -->

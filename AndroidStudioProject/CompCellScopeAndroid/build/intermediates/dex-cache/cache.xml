@@ -2,67 +2,39 @@
 <items version="2" >
 
     <item
-        jar="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
+        jar="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/CompCellScopeAndroid/openCVLibrary249/unspecified/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.0 rc2"
-        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
-        <dex dex="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-90df4a9b6e7af6ef5d9d4a1ae922ec94cf30dbac.jar" />
+        revision="23.0.3"
+        sha1="3dd102f64d8398f4de89aa2efc63ec161df54ab9">
+        <dex dex="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-80fe3b123343f3a5fdbbe07357df4862b08b96e8.jar" />
     </item>
     <item
-        jar="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
+        jar="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.0 rc2"
-        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
-        <dex dex="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-a257813e691c113dc9147cad8f135b4f8bc61c3f.jar" />
-    </item>
-    <item
-        jar="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0 rc2"
+        revision="23.0.3"
         sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
-        <dex dex="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-fb7e8e0ac638c64772e49821fae3945ab4ef8783.jar" />
+        <dex dex="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-f1fa92cc96cbfc988eeb3c7c4d2e3e93b63c7ee8.jar" />
     </item>
     <item
-        jar="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/exploded-aar/CompCellScopeAndroid/openCVLibrary249/unspecified/jars/classes.jar"
+        jar="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.0 rc2"
-        sha1="4412a3a513803533d8117be803ef95b7e2ced210">
-        <dex dex="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-cb985248e8c395da5e3b93e9333c9c3ff5bef749.jar" />
+        revision="23.0.3"
+        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
+        <dex dex="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-0774b1b33b4269901cd989a7c94466da17fb715c.jar" />
     </item>
     <item
-        jar="/Users/joelwhang/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jar="/Users/zfphil/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
         jumboMode="false"
-        revision="23.0.0 rc2"
+        revision="23.0.3"
         sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
-        <dex dex="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-dfbd770dce202533443d5c07a20970b529bd373c.jar" />
+        <dex dex="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-654585f218a90bc07f18efddd0fd99d9a82c4af6.jar" />
     </item>
     <item
-        jar="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
+        jar="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
         jumboMode="false"
-        revision="23.0.0 rc2"
-        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
-        <dex dex="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-3df5779572c2cf389326b8ab3ae2e286c7e50e45.jar" />
-    </item>
-    <item
-        jar="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0 rc2"
-        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
-        <dex dex="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-ede585f117f5f03cdb2c8771633d708d2c3ba9e1.jar" />
-    </item>
-    <item
-        jar="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
-        jumboMode="false"
-        revision="23.0.0 rc2"
+        revision="23.0.3"
         sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
-        <dex dex="/Users/joelwhang/Waller/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-b73d520dbfc02a300ff8f83e727d23bd524fa329.jar" />
-    </item>
-    <item
-        jar="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/CompCellScopeAndroid/openCVLibrary249/unspecified/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0 rc2"
-        sha1="bcd24dcb43c5a8f142bf4594eebc6fbe9362d409">
-        <dex dex="/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/classes-32d38ff88d4eadd794c86666070105ea3242f896.jar" />
+        <dex dex="/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-eae664ffca36b848e44d90277046566527200c26.jar" />
     </item>
 
 </items>

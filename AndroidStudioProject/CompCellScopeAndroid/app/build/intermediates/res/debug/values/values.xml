@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string-array name="LED_Array_List">
         <item>Adafruit 32x32 (R.Pi)</item>
         <item>Waller Lab Dome</item>
     </string-array>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <attr format="reference" name="drawerArrowStyle"/>
     <attr format="dimension" name="height"/>
@@ -156,11 +156,11 @@
     <dimen name="abc_text_size_subtitle_material_toolbar">16dp</dimen>
     <dimen name="abc_text_size_title_material">20sp</dimen>
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <item name="dialog_fixed_height_major" type="dimen">80%</item>
     <item name="dialog_fixed_height_minor" type="dimen">100%</item>
@@ -171,10 +171,10 @@
     <dimen name="notification_large_icon_height">64dp</dimen>
     <dimen name="notification_large_icon_width">64dp</dimen>
     <dimen name="notification_subtext_size">12dp</dimen>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="textbig">72dip</dimen>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
     <item name="action_bar_activity_content" type="id"/>
@@ -208,24 +208,24 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="action_settings">Settings</string>
     <string name="app_name">Computational CellScope</string>
     <string name="hello_world">Hello world!</string>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <string name="status_bar_notification_info_overflow">999+</string>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="title_activity_directory_chooser_dialog">DirectoryChooserDialog</string>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>
     <style name="Animation.AppCompat.DropDownUp" parent="Base.Animation.AppCompat.DropDownUp"/>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <!--
@@ -237,7 +237,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    <!-- From: file:/Users/joelwhang/gsource/master/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <!-- From: file:/Users/zfphil/develop/CompCellScopeAndroid_Development/AndroidStudioProject/CompCellScopeAndroid/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <style name="Base.AlertDialog.AppCompat" parent="android:Widget">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>

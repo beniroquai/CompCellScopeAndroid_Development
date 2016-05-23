@@ -5,7 +5,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion 21
-    buildToolsVersion "23.0.0 rc2"
+    buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "com.wallerlab.compcellscope"
         minSdkVersion 21
